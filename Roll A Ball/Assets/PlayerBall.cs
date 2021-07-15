@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerBall : MonoBehaviour
 {
     Rigidbody rigid;
     AudioSource sound;
-    public GameManager manager;
+    public GameManagerLogic manager;
     bool isJump;
     public float jumppower;
     public int itemcount;
+    
 
     void Awake()
     {
@@ -55,17 +57,33 @@ public class PlayerBall : MonoBehaviour
             itemcount++;
             other.gameObject.SetActive(false);
             sound.Play();
+            manager.GetItem(itemcount);
             
         }
         else if(other.tag == "Finish")
         {
-            if(manager.TotalItemCount!=itemcount)
+            if(manager.stage!=manager.totalstage)
             {
-                //restart
+                if(manager.TotalItemCount==itemcount)
+             {
+                 SceneManager.LoadScene("Scene"+(manager.stage+1));
+             }
+             else
+             {
+                 SceneManager.LoadScene("Scene"+manager.stage);                              
+             }
             }
             else
             {
-                //game clear
+                if(manager.TotalItemCount==itemcount)
+             {
+                 SceneManager.LoadScene(0);
+             }
+             else
+             {
+                 SceneManager.LoadScene("Scene"+manager.stage);                              
+             }
+
             }
 
         }
